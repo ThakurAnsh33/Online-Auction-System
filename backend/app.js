@@ -47,8 +47,11 @@ app.use("/api/v1/bid", bidRouter);
 app.use("/api/v1/commission", commissionRouter);
 app.use("/api/v1/superadmin", superAdminRouter);
 
-endedAuctionCron();
-verifyCommissionCron();
+if (process.env.VERCEL !== "1") {
+  endedAuctionCron();
+  verifyCommissionCron();
+}
+
 connection();
 app.use(errorMiddleware);
 

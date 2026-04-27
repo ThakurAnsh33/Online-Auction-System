@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 export const connection = () => {
+  if (mongoose.connection.readyState === 1) {
+    return;
+  }
+
   mongoose
     .connect(process.env.MONGO_URI, {
       dbName: "MERN_AUCTION_PLATFORM",

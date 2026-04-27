@@ -123,3 +123,46 @@ After Render creates both services, set these environment variables in Render:
 
 Then trigger a manual redeploy for the frontend after setting `VITE_API_URL`.
 
+---
+
+## 🆓 Permanent Deployment (Free via Vercel)
+
+Use two separate Vercel projects from the same repository:
+
+1. **Backend project**
+- Import repo in Vercel
+- **Root Directory:** `backend`
+- Build command: default
+- Output: default
+- Deploy using `backend/vercel.json`
+
+2. **Frontend project**
+- Import repo in Vercel
+- **Root Directory:** `frontend`
+- Build command: `npm run build`
+- Output directory: `dist`
+
+Set these environment variables in Vercel:
+
+### Backend (Vercel project for `backend`)
+- `MONGO_URI`
+- `FRONTEND_URL` = frontend Vercel URL
+- `JWT_SECRET_KEY`
+- `JWT_EXPIRE=7d`
+- `COOKIE_EXPIRE=7`
+- `CLOUDINARY_CLOUD_NAME`
+- `CLOUDINARY_API_KEY`
+- `CLOUDINARY_API_SECRET`
+- `SMTP_HOST=smtp.gmail.com`
+- `SMTP_PORT=587`
+- `SMTP_MAIL`
+- `SMTP_PASSWORD`
+
+### Frontend (Vercel project for `frontend`)
+- `VITE_API_URL` = backend Vercel URL
+
+After both deploys succeed, redeploy frontend once to ensure `VITE_API_URL` is baked into the build.
+
+Note:
+- Background cron jobs are disabled automatically on Vercel serverless runtime.
+
