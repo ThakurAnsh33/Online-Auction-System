@@ -2,6 +2,8 @@ import React from "react";
 import { RiAuctionFill } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import ScrollReveal from "@/custom-components/ScrollReveal";
 
 const UpcomingAuctions = () => {
   const { allAuctions } = useSelector((state) => state.auction);
@@ -12,12 +14,14 @@ const UpcomingAuctions = () => {
 
   return (
     <section>
-      <div style={{ marginBottom: "28px" }}>
+      <ScrollReveal>
+        <div style={{ marginBottom: "28px" }}>
         <span className="section-badge">Today</span>
         <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(1.5rem, 3vw, 2.2rem)", fontWeight: 700, color: "var(--text)" }}>
           Auctions Starting Today
         </h2>
-      </div>
+        </div>
+      </ScrollReveal>
 
       {todayAuctions.length === 0 ? (
         <div style={{ padding: "40px 24px", background: "var(--surface)", borderRadius: "12px", border: "1px solid var(--border)", textAlign: "center" }}>
@@ -27,18 +31,18 @@ const UpcomingAuctions = () => {
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "16px" }}>
           {todayAuctions.slice(0, 6).map((item, i) => (
-            <Link
+            <ScrollReveal key={item._id} delay={i * 0.06}>
+              <motion.div whileHover={{ y: -3 }} transition={{ duration: 0.2 }}>
+                <Link
               key={item._id}
               to={`/auction/item/${item._id}`}
-              className="animate-fade-up"
               style={{
                 textDecoration: "none", display: "flex", alignItems: "center", gap: "14px",
                 padding: "16px", background: "var(--surface)", borderRadius: "12px",
                 border: "1px solid var(--border)", transition: "all 0.25s",
-                animationDelay: `${i * 0.08}s`,
               }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = "var(--gold-dark)"; e.currentTarget.style.transform = "translateY(-3px)"; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.transform = "translateY(0)"; }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = "var(--gold-dark)"; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--border)"; }}
             >
               <img
                 src={item.image?.url}
@@ -58,6 +62,8 @@ const UpcomingAuctions = () => {
               </div>
               <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "var(--ember)", flexShrink: 0 }} className="animate-ticker" />
             </Link>
+              </motion.div>
+            </ScrollReveal>
           ))}
         </div>
       )}

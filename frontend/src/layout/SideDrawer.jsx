@@ -11,13 +11,15 @@ import { FaFileInvoiceDollar, FaEye } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/store/slices/userSlice";
 import { Link, useLocation } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
 
 const NavLink = ({ to, icon, children, onClick }) => {
   const { pathname } = useLocation();
   const active = pathname === to;
   return (
     <li>
-      <Link
+      <motion.div whileHover={{ x: 3 }} transition={{ duration: 0.18 }}>
+        <Link
         to={to}
         onClick={onClick}
         style={{
@@ -35,16 +37,24 @@ const NavLink = ({ to, icon, children, onClick }) => {
         <span style={{ fontSize: "1.1rem", color: active ? "var(--gold)" : "var(--muted)" }}>{icon}</span>
         {children}
       </Link>
+      </motion.div>
     </li>
   );
 };
 
 const SideDrawer = () => {
   const [show, setShow] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(() => window.innerWidth >= 1024);
   const { isAuthenticated, user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const close = () => setShow(false);
+
+  useEffect(() => {
+    const onResize = () => setIsDesktop(window.innerWidth >= 1024);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   return (
     <>
@@ -64,19 +74,27 @@ const SideDrawer = () => {
       </button>
 
       {/* Backdrop */}
-      {show && (
-        <div
-          onClick={close}
-          style={{
-            position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)",
-            zIndex: 1050, backdropFilter: "blur(4px)",
-          }}
-          className="lg:hidden"
-        />
-      )}
+      <AnimatePresence>
+        {show && (
+          <motion.div
+            onClick={close}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            style={{
+              position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)",
+              zIndex: 1050, backdropFilter: "blur(4px)",
+            }}
+            className="lg:hidden"
+          />
+        )}
+      </AnimatePresence>
 
       {/* Sidebar */}
-      <div
+      <motion.div
+        animate={{ x: isDesktop || show ? 0 : -320 }}
+        transition={{ type: "spring", stiffness: 280, damping: 30 }}
         style={{
           width: "300px", height: "100vh", position: "fixed", top: 0,
           left: show ? "0" : "-100%", zIndex: 1060,
@@ -191,7 +209,7 @@ const SideDrawer = () => {
           <Link to="/contact" onClick={close} style={{ color: "var(--muted)", fontSize: "0.8rem", textDecoration: "none", display: "block", marginBottom: "4px" }}>Contact Us</Link>
           <p style={{ color: "var(--muted)", fontSize: "0.75rem" }}>© PrimeBid, LLC. 2025</p>
         </div>
-      </div>
+      </motion.div>
     </>
   );
 };

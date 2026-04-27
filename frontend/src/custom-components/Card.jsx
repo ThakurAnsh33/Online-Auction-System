@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const Card = ({ imgSrc, title, startingBid, startTime, endTime, id }) => {
   const resolvedImgSrc =
@@ -44,18 +45,23 @@ const Card = ({ imgSrc, title, startingBid, startTime, endTime, id }) => {
 
   return (
     <Link to={`/auction/item/${id}`} style={{ textDecoration: "none", display: "block" }}>
-      <div className="auction-card" style={{ height: "100%", display: "flex", flexDirection: "column" }}>
+      <motion.div
+        className="auction-card"
+        style={{ height: "100%", display: "flex", flexDirection: "column" }}
+        whileHover={{ y: -4 }}
+        transition={{ duration: 0.22, ease: "easeOut" }}
+      >
         {/* Image */}
         <div style={{ position: "relative", aspectRatio: "4/3", overflow: "hidden", background: "var(--surface2)" }}>
-          <img
+          <motion.img
             src={resolvedImgSrc}
             alt={title}
             style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.4s ease" }}
             onError={(event) => {
               event.currentTarget.src = "/imageHolder.jpg";
             }}
-            onMouseEnter={e => e.currentTarget.style.transform = "scale(1.05)"}
-            onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.35 }}
           />
           {/* Status badge */}
           <div style={{
@@ -101,7 +107,7 @@ const Card = ({ imgSrc, title, startingBid, startTime, endTime, id }) => {
             </div>
           )}
         </div>
-      </div>
+      </motion.div>
     </Link>
   );
 };

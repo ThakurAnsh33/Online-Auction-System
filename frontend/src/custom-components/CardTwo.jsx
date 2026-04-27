@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { deleteAuction, republishAuction } from "@/store/slices/auctionSlice";
+import { AnimatePresence, motion } from "framer-motion";
 
 const CardTwo = ({ imgSrc, title, startingBid, startTime, endTime, id }) => {
   const resolvedImgSrc = imgSrc || "/imageHolder.jpg";
@@ -57,14 +58,20 @@ const CardTwo = ({ imgSrc, title, startingBid, startTime, endTime, id }) => {
 
   return (
     <>
-      <div className="auction-card basis-full group sm:basis-56 lg:basis-60 2xl:basis-80">
-        <img
+      <motion.div
+        className="auction-card basis-full group sm:basis-56 lg:basis-60 2xl:basis-80"
+        whileHover={{ y: -4 }}
+        transition={{ duration: 0.22, ease: "easeOut" }}
+      >
+        <motion.img
           src={resolvedImgSrc}
           alt={title}
           className="w-full aspect-[4/3] object-cover"
           onError={(event) => {
             event.currentTarget.src = "/imageHolder.jpg";
           }}
+          whileHover={{ scale: 1.04 }}
+          transition={{ duration: 0.3 }}
         />
         <div className="p-4">
           <h5 className="mb-2 text-[18px] font-semibold text-[var(--text)] transition-colors duration-300 group-hover:text-[var(--gold)]">
@@ -110,7 +117,7 @@ const CardTwo = ({ imgSrc, title, startingBid, startTime, endTime, id }) => {
             </button>
           </div>
         </div>
-      </div>
+      </motion.div>
       <Drawer id={id} openDrawer={openDrawer} setOpenDrawer={setOpenDrawer} />
     </>
   );
@@ -131,12 +138,21 @@ const Drawer = ({ setOpenDrawer, openDrawer, id }) => {
   };
 
   return (
-    <section
-      className={`fixed ${
-        openDrawer && id ? "bottom-0" : "-bottom-full"
-      }  left-0 w-full transition-all duration-300 h-full bg-[#00000087] flex items-end`}
-    >
-      <div className="bg-white h-fit transition-all duration-300 w-full">
+    <AnimatePresence>
+      {openDrawer && id && (
+        <motion.section
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed left-0 bottom-0 w-full h-full bg-[#00000087] flex items-end"
+        >
+          <motion.div
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "100%" }}
+            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            className="bg-white h-fit w-full"
+          >
         <div className="w-full px-5 py-8 sm:max-w-[640px] sm:m-auto">
           <h3 className="text-[#D6482B]  text-3xl font-semibold text-center mb-1">
             Republish Auction
@@ -194,7 +210,9 @@ const Drawer = ({ setOpenDrawer, openDrawer, id }) => {
             </div>
           </form>
         </div>
-      </div>
-    </section>
+          </motion.div>
+        </motion.section>
+      )}
+    </AnimatePresence>
   );
 };

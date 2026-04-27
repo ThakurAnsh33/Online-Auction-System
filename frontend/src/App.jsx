@@ -1,5 +1,10 @@
 import React, { useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import SideDrawer from "./layout/SideDrawer";
 import Home from "./pages/Home";
 import { ToastContainer } from "react-toastify";
@@ -21,6 +26,37 @@ import ViewAuctionDetails from "./pages/ViewAuctionDetails";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Contact from "./pages/Contact";
 import UserProfile from "./pages/UserProfile";
+import { AnimatePresence } from "framer-motion";
+import AnimatedPage from "./custom-components/AnimatedPage";
+
+const RouteContainer = ({ children }) => <AnimatedPage>{children}</AnimatedPage>;
+
+const AnimatedRoutes = () => {
+  const location = useLocation();
+
+  return (
+    // Route-level page transitions without touching business logic/state.
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<RouteContainer><Home /></RouteContainer>} />
+        <Route path="/sign-up" element={<RouteContainer><SignUp /></RouteContainer>} />
+        <Route path="/login" element={<RouteContainer><Login /></RouteContainer>} />
+        <Route path="/submit-commission" element={<RouteContainer><SubmitCommission /></RouteContainer>} />
+        <Route path="/how-it-works-info" element={<RouteContainer><HowItWorks /></RouteContainer>} />
+        <Route path="/about" element={<RouteContainer><About /></RouteContainer>} />
+        <Route path="/leaderboard" element={<RouteContainer><Leaderboard /></RouteContainer>} />
+        <Route path="/auctions" element={<RouteContainer><Auctions /></RouteContainer>} />
+        <Route path="/auction/item/:id" element={<RouteContainer><AuctionItem /></RouteContainer>} />
+        <Route path="/create-auction" element={<RouteContainer><CreateAuction /></RouteContainer>} />
+        <Route path="/view-my-auctions" element={<RouteContainer><ViewMyAuctions /></RouteContainer>} />
+        <Route path="/auction/details/:id" element={<RouteContainer><ViewAuctionDetails /></RouteContainer>} />
+        <Route path="/dashboard" element={<RouteContainer><Dashboard /></RouteContainer>} />
+        <Route path="/contact" element={<RouteContainer><Contact /></RouteContainer>} />
+        <Route path="/me" element={<RouteContainer><UserProfile /></RouteContainer>} />
+      </Routes>
+    </AnimatePresence>
+  );
+};
 
 const App = () => {
   const dispatch = useDispatch();
@@ -32,23 +68,7 @@ const App = () => {
   return (
     <Router>
       <SideDrawer />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/submit-commission" element={<SubmitCommission />} />
-        <Route path="/how-it-works-info" element={<HowItWorks />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/leaderboard" element={<Leaderboard />} />
-        <Route path="/auctions" element={<Auctions />} />
-        <Route path="/auction/item/:id" element={<AuctionItem />} />
-        <Route path="/create-auction" element={<CreateAuction />} />
-        <Route path="/view-my-auctions" element={<ViewMyAuctions />} />
-        <Route path="/auction/details/:id" element={<ViewAuctionDetails />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/me" element={<UserProfile />} />
-      </Routes>
+      <AnimatedRoutes />
       <ToastContainer position="top-right" />
     </Router>
   );
