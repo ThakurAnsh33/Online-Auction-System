@@ -1,6 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { getApiBaseUrl } from "../../lib/api";
+
+const API_BASE = getApiBaseUrl();
 
 const userSlice = createSlice({
   name: "user",
@@ -91,7 +94,7 @@ export const register = (data) => async (dispatch) => {
   dispatch(userSlice.actions.registerRequest());
   try {
     const response = await axios.post(
-      `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/v1/user/register`,
+      `${API_BASE}/api/v1/user/register`,
       data,
       {
         withCredentials: true,
@@ -117,7 +120,7 @@ export const login = (data) => async (dispatch) => {
         ? Object.fromEntries(data.entries())
         : data;
     const response = await axios.post(
-      `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/v1/user/login`,
+      `${API_BASE}/api/v1/user/login`,
       payload,
       {
         withCredentials: true,
@@ -137,7 +140,7 @@ export const login = (data) => async (dispatch) => {
 export const logout = () => async (dispatch) => {
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/v1/user/logout`,
+      `${API_BASE}/api/v1/user/logout`,
       { withCredentials: true }
     );
     dispatch(userSlice.actions.logoutSuccess());
@@ -153,7 +156,7 @@ export const logout = () => async (dispatch) => {
 export const fetchUser = () => async (dispatch) => {
   dispatch(userSlice.actions.fetchUserRequest());
   try {
-    const response = await axios.get(`${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/v1/user/me`, {
+    const response = await axios.get(`${API_BASE}/api/v1/user/me`, {
       withCredentials: true,
     });
     dispatch(userSlice.actions.fetchUserSuccess(response.data.user));
@@ -169,7 +172,7 @@ export const fetchLeaderboard = () => async (dispatch) => {
   dispatch(userSlice.actions.fetchLeaderboardRequest());
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/v1/user/leaderboard`,
+      `${API_BASE}/api/v1/user/leaderboard`,
       {
         withCredentials: true,
       }

@@ -2,8 +2,9 @@ import axios from "axios";
 import { createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { getAllAuctionItems } from "./auctionSlice";
+import { getApiBaseUrl } from "../../lib/api";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_BASE = getApiBaseUrl();
 
 const superAdminSlice = createSlice({
   name: "superAdmin",
