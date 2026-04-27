@@ -94,3 +94,32 @@ Backend will run at: `http://localhost:5000`
 - Redesigned sidebar with active link highlighting and user avatar
 - Responsive 2-column grid for auction cards
 
+---
+
+## 🚀 Permanent Deployment (Render)
+
+This repository includes a `render.yaml` blueprint to deploy both services:
+- `online-auction-api` (Node backend)
+- `online-auction-web` (static React frontend)
+
+One-click deploy:
+
+`https://render.com/deploy?repo=https://github.com/ThakurAnsh33/Online-Auction-System`
+
+After Render creates both services, set these environment variables in Render:
+
+### Backend service (`online-auction-api`)
+- `MONGO_URI`
+- `JWT_SECRET_KEY`
+- `CLOUDINARY_CLOUD_NAME`
+- `CLOUDINARY_API_KEY`
+- `CLOUDINARY_API_SECRET`
+- `SMTP_MAIL`
+- `SMTP_PASSWORD`
+- `FRONTEND_URL` = your frontend Render URL (example: `https://online-auction-web.onrender.com`)
+
+### Frontend service (`online-auction-web`)
+- `VITE_API_URL` = your backend Render URL (example: `https://online-auction-api.onrender.com`)
+
+Then trigger a manual redeploy for the frontend after setting `VITE_API_URL`.
+
